@@ -45,4 +45,7 @@ public class DniAdapter extends RecyclerView.Adapter<DniHolder> {
         this.dniList = lista_dnis;
     }
 
+    public void setDniList(List<Dni> lista_dnis) {
+        this.dniList = lista_dnis;
+    }
 }

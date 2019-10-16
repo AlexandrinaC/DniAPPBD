@@ -19,6 +19,8 @@
             android:background="@color/colorAccent">
 
             <TextView
+                android:id="@+id/dni"
+                android:onClick="ordenarPorDni"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center_horizontal|center_vertical"
@@ -28,6 +30,8 @@
                 android:textSize="16sp"></TextView>
 
             <TextView
+                android:id="@+id/letrita"
+                android:onClick="ordenarLetraDni"
                 android:layout_width="0dp"
                 android:layout_height="match_parent"
                 android:layout_gravity="center"

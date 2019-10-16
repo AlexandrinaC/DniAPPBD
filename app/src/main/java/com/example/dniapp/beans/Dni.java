@@ -1,5 +1,7 @@
 package com.example.dniapp.beans;
 
+import java.util.Comparator;
+
 /**
  * Clase que representa un DNI
  */
@@ -52,4 +54,7 @@ public class Dni {
 
         return letra_calculada;
     }
+
+    //Añadimos el compareTo a la clase Dni. Implementandolo también arriba.
+
 }
