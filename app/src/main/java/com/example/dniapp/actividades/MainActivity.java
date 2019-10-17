@@ -20,6 +20,7 @@ import com.example.dniapp.beans.Dni;
 import com.example.dniapp.beans.DniX;
 import com.example.dniapp.beans.DniY;
 import com.example.dniapp.beans.DniZ;
+import com.example.dniapp.dao.BaseDatosDni;
 import com.example.dniapp.util.Preferencias;
 import com.google.gson.Gson;
 
@@ -30,6 +31,8 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_APP = "DNI_APP";
     private RadioButton radioButtonSeleccionado;
     private EditText caja_dni;
+
+    private BaseDatosDni baseDatosDni;
 
     private void mostrarListaDnis (List<Dni> list)
     {
@@ -46,6 +49,8 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         this.caja_dni = findViewById(R.id.dni);
         int id_radio = Preferencias.obtenerRadioActivo(this);
+        //Creo mi base de datos para mis Dnis.
+        baseDatosDni = new BaseDatosDni(this, "MiDB", null, 1);
         if (id_radio==0)//no había guardado
         {
             this.radioButtonSeleccionado = findViewById(R.id.radio1);
@@ -56,11 +61,16 @@ public class MainActivity extends AppCompatActivity {
 
         }
 
-        String ultimo_dni = Preferencias.obtenerUltimoDNI(this);
+        /*String ultimo_dni = Preferencias.obtenerUltimoDNI(this);
         this.caja_dni.setText(ultimo_dni);
 
-        List<Dni> dniList = Preferencias.cargarFicheroDni(this);
+        List<Dni> dniList = Preferencias.cargarFicheroDni(this);*/
+
+        //Creo mi Dni List.
+        List<Dni> dniList = baseDatosDni.buscarDnis();
         mostrarListaDnis(dniList);
+
+        //Ahora leo de mi base de datos, no de preferencias.
 
 
     }
@@ -106,10 +116,14 @@ public class MainActivity extends AppCompatActivity {
 
         //guadarmos el objeto DNI
         dni.setLetra(letra_dni);
-        Gson gson = new Gson();
+        /*Gson gson = new Gson();
         String dni_json = gson.toJson(dni);
         Log.d(TAG_APP, "DNI json " + dni_json);
-        Preferencias.guardarDNIJson(this, dni_json);
+        Preferencias.guardarDNIJson(this, dni_json);*/
+
+        //Insertamos nuestros Dnis en la base de datos que hemos creado
+        baseDatosDni.insertarDni(dni);
+
     }
 
 
