@@ -28,57 +28,48 @@ public class ListaDnisActivity extends AppCompatActivity {
 
     private BaseDatosDni baseDatosDni;
     private List<Dni> dniList;
+    private DniAdapter dniAdapter;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_lista_dnis);
 
+        //Esto solo si recupero mis datos de las Preferences.
        // List<Dni> dniList = Preferencias.cargarFicheroDni(this);
 
-        File dbpath = getDatabasePath("MiDB");
-        boolean existe_bd = dbpath.exists();
-        //Inicializo mi base de datos. La creo.
-        if(existe_bd){
-        baseDatosDni = new BaseDatosDni( this , "MiBD", null, 1);
-
-        //Creo mi lista de Dnis.
-            dniList = baseDatosDni.buscarDnis();}
-        else{
-           dniList = new ArrayList<Dni>();
-        }
+        //Creo mi base de datos. La cual va a ser una primera versión.
+        baseDatosDni = new BaseDatosDni( this , BaseDatosDni.NOMBRE_BD, null, 1);
+        //Buscamos los Dnis.
+        dniList = baseDatosDni.buscarDnis();
 
 
 
-        if (dniList!=null && dniList.size() > 0)
+        //Si la lista es diferente de null y tiene un tamaño mayor que 0:
+        if ((dniList!=null) && (dniList.size() > 0))
         {
+            //Cojo la caja que voy a inflar y que luego rellenare con los datos.
             findViewById(R.id.caja_no_resultado).setVisibility(View.GONE);
-            DniAdapter dniAdapter = new DniAdapter(dniList);
+            //Creo mi Adapter, al cual ,le voy a pasar mi dniList.
+            this.dniAdapter = new DniAdapter(dniList);
+            //Con el recycler, inflo la fila de datos.
             RecyclerView recyclerView = findViewById(R.id.recycler_view);
+            //Al recycler le digo que Adapter tiene que utilizar.
             recyclerView.setAdapter(dniAdapter);
+
+            //ESTILO
             recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
             recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
         }
 
     }
 
-         //Para ordenar por el numero
+    //Para ordenar por el numero
     public void ordenarPorDni (View view)
     {
-        //List<Dni> lista_dnis = Preferencias.cargarFicheroDni(this);
-        baseDatosDni = new BaseDatosDni( this , "MiBD", null, 1);
-
-        //Paso mi nueva lista de Dnis.
-        List<Dni> lista_dnis = baseDatosDni.buscarDnis();
-
-        DniAdapter dniAdapter = new DniAdapter(lista_dnis);
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(dniAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
         ComparatorNumero comparatorNumero = new ComparatorNumero();
-        Collections.sort(lista_dnis, comparatorNumero);
-        dniAdapter.setDniList(lista_dnis);
+        Collections.sort(dniList, comparatorNumero);
+
         dniAdapter.notifyDataSetChanged();
 
         String text = "Ordenado de menor a mayor";
@@ -88,29 +79,12 @@ public class ListaDnisActivity extends AppCompatActivity {
         toast.show();
 
     }
-     //Para ordenar por la letra
+    //Para ordenar por la letra
     public void ordenarLetraDni(View view) {
-
-        baseDatosDni = new BaseDatosDni( this , "MiBD", null, 1);
-
-
-        //Creo mi variable de base de datos.
-
-        //List<Dni> lista_dnis = Preferencias.cargarFicheroDni(this);
-
-        //Paso mi nueva lista de dnis a todas las acciones que tengo.
-        List<Dni> lista_dnis = baseDatosDni.buscarDnis();
-
-        DniAdapter dniAdapter = new DniAdapter(lista_dnis);
-        RecyclerView recyclerView = findViewById(R.id.recycler_view);
-        recyclerView.setAdapter(dniAdapter);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false));
-        recyclerView.addItemDecoration(new DividerItemDecoration(this, DividerItemDecoration.VERTICAL));
 
 
         ComparatorDni comparatorDni = new ComparatorDni();
-        Collections.sort(lista_dnis, comparatorDni);
-        dniAdapter.setDniList(lista_dnis);
+        Collections.sort(dniList, comparatorDni);
         dniAdapter.notifyDataSetChanged();
 
         String text = "Ordenado alfabéticamente";

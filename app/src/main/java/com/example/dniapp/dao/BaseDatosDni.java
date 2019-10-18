@@ -1,5 +1,6 @@
 package com.example.dniapp.dao;
 
+import android.Manifest;
 import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
@@ -8,6 +9,7 @@ import android.util.Log;
 
 import androidx.annotation.Nullable;
 
+import com.example.dniapp.actividades.MainActivity;
 import com.example.dniapp.beans.Dni;
 
 import java.util.ArrayList;
@@ -16,7 +18,12 @@ import java.util.List;
 //extends SGLOpenHelper porque este es el que me va a ayudar a crear mi base de datos para los Dnis.
 public class BaseDatosDni extends SQLiteOpenHelper {
 
-    private final String SQL_CREACION_TABLA_DNI = "CREATE TABLE DNI (id INTEGER PRIMARY KEY, dni TEXT)";
+    //Mejor declaro una constante con el nombre de mi base de datos, para que en la posterioridad, NO ME EQUIVOQUE Y PETE TODO. :)
+
+    public final static String NOMBRE_BD = "MiDB";
+
+    //Creo la forma que va a tener mi lista de Dnis.
+    private final String SQL_CREACION_TABLA_DNI = "CREATE TABLE DNI (id INTEGER PRIMARY KEY AUTOINCREMENT, numero INTEGER, letra TEXT)"; //El id siempre hay que ponerlo.
 
     public BaseDatosDni(@Nullable Context context, @Nullable String name, @Nullable SQLiteDatabase.CursorFactory factory, int version) {
         super(context, name, factory, version);
@@ -31,6 +38,7 @@ public class BaseDatosDni extends SQLiteOpenHelper {
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
+        //Esto se utilizaría para cambiar, si vamos a editar la lista que ya tenemos.
 
     }
 
@@ -40,10 +48,12 @@ public class BaseDatosDni extends SQLiteOpenHelper {
 
     public void insertarDni (Dni dni) {
         try{
+            //Metodo para escribir en la base de datos
             SQLiteDatabase database = this.getWritableDatabase();
             database.execSQL("INSERT INTO DNI (numero, letra) VALUES (" + dni.getNumero() + " , '" + dni.getLetra() + "')");
             this.cerrarBaseDatos(database);
         }
+        //Estas son las excepciones. En caso de que no funcione al insertar algo, o por si se inserta dos veces,etc.
         catch (NullPointerException n)
         {
             Log.e("MIAPP", "Null ha dejado de funcionar insertando un dni", n);
@@ -86,6 +96,11 @@ public class BaseDatosDni extends SQLiteOpenHelper {
 
     }*/
 
+    /**
+     *
+     * @return null si no existen dnis, una lista en caso contrario
+     */
+
    public List<Dni> buscarDnis ()
    {
        //Digo la forma que va a tener mi lista de dnis.
@@ -100,12 +115,14 @@ public class BaseDatosDni extends SQLiteOpenHelper {
        //Accedo a mi base de datos.
        SQLiteDatabase basedatos = this.getReadableDatabase();
        //Con mi cursor accedo a la base de datos.
+       Log.d(MainActivity.TAG_APP, "Ejecutando sql "+ consulta);
        Cursor cursor = basedatos.rawQuery(consulta, null);
 
 
-       if ( cursor != null && cursor.getCount() >0);
+       if ((cursor != null) && (cursor.getCount()>0))
        {
            //Si tenemos por lo menos un dato en nuestra lista, nos vamos a la posicion 1.
+           Log.d(MainActivity.TAG_APP, "La consulta recuperó "+ cursor.getCount() + " registros");
            cursor.moveToFirst();
            //Creo una lista con la cantidad de datos que tenga (haya contado) el cursor.
            lista_dnis = new ArrayList<Dni>(cursor.getCount());
@@ -118,6 +135,8 @@ public class BaseDatosDni extends SQLiteOpenHelper {
 
            } while (cursor.moveToNext()); //Nos vamos a la próxima posición.
             cursor.close();//Si ya no hay más datos, se para el cursor.
+       } else {
+           Log.d(MainActivity.TAG_APP, "La consulta recuperó 0 registros");
        }
        this.cerrarBaseDatos(basedatos);
        return lista_dnis;

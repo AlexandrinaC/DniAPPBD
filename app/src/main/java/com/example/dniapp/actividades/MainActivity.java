@@ -37,10 +37,16 @@ public class MainActivity extends AppCompatActivity {
     private void mostrarListaDnis (List<Dni> list)
     {
         Log.d(TAG_APP, "Mostrando lista de Dnis");
-        for (Dni dni : list)
+        if (list!=null)
         {
-            Log.d(TAG_APP, dni.getNumero() + " " + dni.getLetra());
+            for (Dni dni : list)
+            {
+                Log.d(TAG_APP, dni.getNumero() + " " + dni.getLetra());
+            }
+        } else {
+            Log.d(TAG_APP, "Lista vacía.");
         }
+
     }
 
     @Override
@@ -50,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         this.caja_dni = findViewById(R.id.dni);
         int id_radio = Preferencias.obtenerRadioActivo(this);
         //Creo mi base de datos para mis Dnis.
-        baseDatosDni = new BaseDatosDni(this, "MiDB", null, 1);
+        baseDatosDni = new BaseDatosDni(this, BaseDatosDni.NOMBRE_BD, null, 1);
         if (id_radio==0)//no había guardado
         {
             this.radioButtonSeleccionado = findViewById(R.id.radio1);
