@@ -9,7 +9,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".actividades.ListaDnisActivity"></activity>
+        <activity android:name=".actividades.ListaDnisActivity" />
         <activity
             android:name=".actividades.AnimacionLetraActivity"
             android:label="Resultado Letra DNI" />

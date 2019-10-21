@@ -64,6 +64,19 @@ public class BaseDatosDni extends SQLiteOpenHelper {
         }
     }
 
+    //Para borrar de la base de datos.
+
+
+    public void borrarDeBaseDatos (int numero){
+        try{
+            SQLiteDatabase database = this.getWritableDatabase();
+            database.execSQL ("DELETE FROM DNI WHERE numero = " + numero );
+        }catch (Exception e){
+            Log.e("MIAPP", "Ha dejado de funcionar borrando" + numero);
+
+        }
+    }
+
    /*
     //Este metodo solo lo utilizo si voy a asociar este Dni a algo.
       public Dni buscarDni (Dni dni)
@@ -141,4 +154,5 @@ public class BaseDatosDni extends SQLiteOpenHelper {
        this.cerrarBaseDatos(basedatos);
        return lista_dnis;
    }
+
 }

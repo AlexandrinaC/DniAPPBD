@@ -31,6 +31,7 @@ public class MainActivity extends AppCompatActivity {
     public static final String TAG_APP = "DNI_APP";
     private RadioButton radioButtonSeleccionado;
     private EditText caja_dni;
+    List<Dni> dniList;
 
     private BaseDatosDni baseDatosDni;
 
@@ -57,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
         int id_radio = Preferencias.obtenerRadioActivo(this);
         //Creo mi base de datos para mis Dnis.
         baseDatosDni = new BaseDatosDni(this, BaseDatosDni.NOMBRE_BD, null, 1);
-        if (id_radio==0)//no había guardado
+        /*if (id_radio==0)//no había guardado
         {
             this.radioButtonSeleccionado = findViewById(R.id.radio1);
         }
@@ -66,14 +67,14 @@ public class MainActivity extends AppCompatActivity {
             this.radioButtonSeleccionado.setChecked(true);
 
         }
-
+*/
         /*String ultimo_dni = Preferencias.obtenerUltimoDNI(this);
         this.caja_dni.setText(ultimo_dni);
 
         List<Dni> dniList = Preferencias.cargarFicheroDni(this);*/
 
         //Creo mi Dni List.
-        List<Dni> dniList = baseDatosDni.buscarDnis();
+        dniList = baseDatosDni.buscarDnis();
         mostrarListaDnis(dniList);
 
         //Ahora leo de mi base de datos, no de preferencias.
@@ -186,6 +187,8 @@ public class MainActivity extends AppCompatActivity {
         AlertDialog dialog = builder.create();
         dialog.show();
     }
+
+
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
